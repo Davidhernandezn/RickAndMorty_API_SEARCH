@@ -28,7 +28,10 @@ export class BuscadorComponent extends LitElement {
         return {
             //IMPOTRAMOS EN LAS PROPIEDADES LOS CATALOGOS
             status_list: { type: Array },
-            gender_list: { type: Array }
+            gender_list: { type: Array },
+            //DE COMPONENTE INPUT
+            inputType: { type: String },
+            placeHolderName: { type: String },
         }
     }
 
@@ -38,7 +41,8 @@ export class BuscadorComponent extends LitElement {
         //ESTAS PROPIEDADES TOMAN SU VALOR DEL ARRAY IMPORTADO
         this.status_list = status_list;
         this.gender_list = gender_list;
-
+        this.inputType = "Text"
+        this.placeHolderName = "Nombre del personaje"
         console.log(status_list);
         console.log(gender_list);
     }
@@ -47,9 +51,20 @@ export class BuscadorComponent extends LitElement {
     render() {
         return html`
         <h1>Buscador</h1>
+        <!--COMPONENTE CARD-->
         <card class="card grid-column-12">
             <div class="grid-rows-2">
-                <div class="grid-column-4"></div>              
+                <div class="grid-column-4">
+        <!--COMPONENTE INPUT-->            
+                <div-input>
+                <input class="colorInput" 
+                .type="${this.inputType}"
+                .placeholder="${this.placeHolderName}">
+                <div class="space"></div>
+                <span class="error-msg" id="error"></span>
+            </div-input>
+            
+                </div>              
                 <div class="grid-column-4"></div>       
             </div>
         </card>
