@@ -32,6 +32,8 @@ export class BuscadorComponent extends LitElement {
             //DE COMPONENTE INPUT
             inputType: { type: String },
             placeHolderName: { type: String },
+            placeHolderSpecie: { type: String },
+            placeHolderType: { type: String },
         }
     }
 
@@ -41,8 +43,10 @@ export class BuscadorComponent extends LitElement {
         //ESTAS PROPIEDADES TOMAN SU VALOR DEL ARRAY IMPORTADO
         this.status_list = status_list;
         this.gender_list = gender_list;
-        this.inputType = "Text"
-        this.placeHolderName = "Nombre del personaje"
+        this.inputType = "Text";
+        this.placeHolderName = "Nombre del personaje";
+        this.placeHolderSpecie = "ingresa una especie";
+        this.placeHolderType = "ingresa un tipo";
         console.log(status_list);
         console.log(gender_list);
     }
@@ -51,10 +55,12 @@ export class BuscadorComponent extends LitElement {
     render() {
         return html`
         <h1>Buscador</h1>
+
         <!--COMPONENTE CARD-->
         <card class="card grid-column-12">
             <div class="grid-rows-2">
                 <div class="grid-column-4">
+
         <!--COMPONENTE INPUT-->            
                 <div-input>
                 <input class="colorInput" 
@@ -63,8 +69,39 @@ export class BuscadorComponent extends LitElement {
                 <div class="space"></div>
                 <span class="error-msg" id="error"></span>
             </div-input>
+
+        <!--COMPONENTE SELECT-->
+            <div-select>
+            <div class="space"></div>
+            <select class="colorSelect">
+            ${this.status_list.map(status => html`
+          <option value="${status.value}">${status.text}</option>
+        `)}
+            </select>
+            <div class="space"></div>
+            <span class="error-msg" id="error"></span>
+        </div-select>
+
+        <!--COMPONENTE INPUT-->            
+        <div-input>
+                <input class="colorInput" 
+                .type="${this.inputType}"
+                .placeholder="${this.placeHolderSpecie}">
+                <div class="space"></div>
+                <span class="error-msg" id="error"></span>
+            </div-input>
+        
+        <!--COMPONENTE INPUT-->            
+                <div-input>
+                <input class="colorInput" 
+                .type="${this.inputType}"
+                .placeholder="${this.placeHolderType}">
+                <div class="space"></div>
+                <span class="error-msg" id="error"></span>
+                </div-input>
+                
             
-                </div>              
+            </div>              
                 <div class="grid-column-4"></div>       
             </div>
         </card>
