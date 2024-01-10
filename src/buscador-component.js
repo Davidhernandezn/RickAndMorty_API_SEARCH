@@ -19,7 +19,13 @@ export class BuscadorComponent extends LitElement {
             butonStyles,
             generalStyles,
             inputStyles,
-            selectStyles
+            selectStyles, 
+            css`
+            .buttonForm{
+                height: 25%;
+                margin-top: 20px;
+            }
+            `
         ]
     }
 
@@ -34,6 +40,7 @@ export class BuscadorComponent extends LitElement {
             placeHolderName: { type: String },
             placeHolderSpecie: { type: String },
             placeHolderType: { type: String },
+            placeHolderPage: { type: String },
         }
     }
 
@@ -49,6 +56,8 @@ export class BuscadorComponent extends LitElement {
         this.placeHolderType = "ingresa un tipo";
         console.log(status_list);
         console.log(gender_list);
+        this.placeHolderPage = "ingresa una pagina";
+
     }
 
     // render para llamar al template
@@ -102,7 +111,31 @@ export class BuscadorComponent extends LitElement {
                 
             
             </div>              
-                <div class="grid-column-4"></div>       
+                <div class="grid-column-4">
+                      <!--COMPONENTE SELECT-->
+            <div-select>
+            <div class="space"></div>
+            <select class="colorSelect">
+            ${this.gender_list.map(gender => html`
+          <option value="${gender.value}">${gender.text}</option>
+        `)}
+            </select>
+            <div class="space"></div>
+            <span class="error-msg" id="error"></span>
+        </div-select>
+
+                <!--COMPONENTE INPUT-->            
+                <div-input>
+                <input class="colorInput" 
+                .type="${this.inputType}"
+                .placeholder="${this.placeHolderPage}">
+                <div class="space"></div>
+                <span class="error-msg" id="error"></span>
+                </div-input>
+
+                <button-primary class="button-primary buttonForm">Buscar</button-primary>
+
+                </div>       
             </div>
         </card>
         
