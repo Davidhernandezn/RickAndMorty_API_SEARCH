@@ -50,6 +50,12 @@ export class BuscadorComponent extends LitElement {
                 text-align:left;
                 margin-left:10px;
             }
+
+            .error-search{
+                font-size:40px;
+                color: red;
+                margin-left: 500px;
+            }
             `
         ]
     }
@@ -189,6 +195,7 @@ export class BuscadorComponent extends LitElement {
         <br>
         <br>
         <div id="buscador"></div>
+        <div id="error-search" class="grid-column-12 error-search"></div>
         
         `
     }
@@ -196,31 +203,30 @@ export class BuscadorComponent extends LitElement {
     //RECUPERA VALORES DE LOS COMPONENTES Y LOS AGREGA EN UN OBJETO
     searchParams(){
         //VALIDACION IF PARA DEJAR PASAR UN PARAMETRO CON INFORMACION Y NO FALLA AL ENVIAR LA PETICION
-        if(this.params.name){
+        //if(this.params.name){
         this.params.name = this.shadowRoot.querySelector("#name").value;
         console.log(this.params.name);
-
-        }
+        //}
 
         if(this.params.status){
         this.params.status = this.shadowRoot.querySelector("#status").value;
         }
 
-        if(this.params.species){
+        //if(this.params.species){
         this.params.species = this.shadowRoot.querySelector("#species").value;
-        }
+        //}
 
-        if(this.params.type){
+        //if(this.params.type){
         this.params.type = this.shadowRoot.querySelector("#type").value;
-        }
+      //  }
 
         if( this.params.gender){
         this.params.gender = this.shadowRoot.querySelector("#gender").value;
         }
 
-        if(this.params.page){
+        //if(this.params.page){
             this.params.page = this.shadowRoot.querySelector("#page").value;
-        }
+        //}
         
         console.log(this.params);
         console.log(this.params.name);
@@ -239,13 +245,14 @@ export class BuscadorComponent extends LitElement {
         fetch(url)
         .then(response => response.json()) // Cambiado "respuesta" a "response"
         .then(respuesta => {
-            console.log(respuesta.results);
             this.clean();//LIMPIAR CADA VEZ QUE HAY CONSULTA
 
+            console.log(respuesta.results);
+            this.clean();//LIMPIAR CADA VEZ QUE HAY CONSULTA
+            if(respuesta.results){//SI TRAE DATOS Y EXITE
             //ACCEDER A LA INFO, 
             respuesta.results.forEach(element =>{
                 console.log(element.name);
-
                 this.shadowRoot.getElementById("buscador").innerHTML += `
                 <div class="buscador-div">
                  <card-album class="card-album">
@@ -260,6 +267,16 @@ export class BuscadorComponent extends LitElement {
                
                 `
             })
+            }else{
+                //this.clean();//LIMPIAR CADA VEZ QUE HAY CONSULTA
+
+                this.shadowRoot.getElementById("error-search").innerHTML='NO HAY RESULTADOS';
+                setTimeout(()=>{
+                    this.shadowRoot.getElementById("error-search").innerHTML = '';
+                },1000);
+            }
+
+
         })
     
     }
