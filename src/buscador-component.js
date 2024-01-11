@@ -24,7 +24,17 @@ export class BuscadorComponent extends LitElement {
             .buttonForm{
                 height: 25%;
                 margin-top: 20px;
+                width:50%;
+
             }
+
+            .colorInput{
+                background-color:var(--secondary-color);
+            }
+
+            .colorSelect{
+                background-color:var(--secondary-color);
+                            }
             `
         ]
     }
@@ -41,6 +51,8 @@ export class BuscadorComponent extends LitElement {
             placeHolderSpecie: { type: String },
             placeHolderType: { type: String },
             placeHolderPage: { type: String },
+            //PARA FILTRO
+            params:{type: Object}
         }
     }
 
@@ -57,6 +69,15 @@ export class BuscadorComponent extends LitElement {
         console.log(status_list);
         console.log(gender_list);
         this.placeHolderPage = "ingresa una pagina";
+//LOS VALORES DEL INPUT LOS MANDARA EN ESTE OBJETO
+        this.params = {
+            name:'',
+            status:'',
+            species:'',
+            type:'',
+            gender: '',
+            page: ''
+        }
 
     }
 
@@ -72,7 +93,9 @@ export class BuscadorComponent extends LitElement {
 
         <!--COMPONENTE INPUT-->            
                 <div-input>
-                <input class="colorInput" 
+                <input
+                id="name"
+                class="colorInput" 
                 .type="${this.inputType}"
                 .placeholder="${this.placeHolderName}">
                 <div class="space"></div>
@@ -82,7 +105,7 @@ export class BuscadorComponent extends LitElement {
         <!--COMPONENTE SELECT-->
             <div-select>
             <div class="space"></div>
-            <select class="colorSelect">
+            <select class="colorSelect" id="status">
             ${this.status_list.map(status => html`
           <option value="${status.value}">${status.text}</option>
         `)}
@@ -93,7 +116,9 @@ export class BuscadorComponent extends LitElement {
 
         <!--COMPONENTE INPUT-->            
         <div-input>
-                <input class="colorInput" 
+                <input 
+                id="species"
+                class="colorInput" 
                 .type="${this.inputType}"
                 .placeholder="${this.placeHolderSpecie}">
                 <div class="space"></div>
@@ -102,7 +127,9 @@ export class BuscadorComponent extends LitElement {
         
         <!--COMPONENTE INPUT-->            
                 <div-input>
-                <input class="colorInput" 
+                <input
+                id="type"
+                class="colorInput" 
                 .type="${this.inputType}"
                 .placeholder="${this.placeHolderType}">
                 <div class="space"></div>
@@ -115,7 +142,9 @@ export class BuscadorComponent extends LitElement {
                       <!--COMPONENTE SELECT-->
             <div-select>
             <div class="space"></div>
-            <select class="colorSelect">
+            <select
+            id="gender"
+             class="colorSelect">
             ${this.gender_list.map(gender => html`
           <option value="${gender.value}">${gender.text}</option>
         `)}
@@ -126,15 +155,19 @@ export class BuscadorComponent extends LitElement {
 
                 <!--COMPONENTE INPUT-->            
                 <div-input>
-                <input class="colorInput" 
+                <input 
+                id="page"
+                class="colorInput" 
                 .type="${this.inputType}"
                 .placeholder="${this.placeHolderPage}">
                 <div class="space"></div>
                 <span class="error-msg" id="error"></span>
                 </div-input>
 
-                <button-primary class="button-primary buttonForm">Buscar</button-primary>
-
+                <button-primary class="button-primary buttonForm">Limpiar</button-primary>
+                <svg class="ic-search" @click="${this.searchParams}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+</svg>
                 </div>       
             </div>
         </card>
@@ -142,7 +175,61 @@ export class BuscadorComponent extends LitElement {
         `
     }
 
+    //RECUPERA VALORES DE LOS COMPONENTES Y LOS AGREGA EN UN OBJETO
+    searchParams(){
+        //VALIDACION IF PARA DEJAR PASAR UN PARAMETRO CON INFORMACION Y NO FALLA AL ENVIAR LA PETICION
+        if(this.params.name){
+        this.params.name = this.shadowRoot.querySelector("#name").value;
+        console.log(this.params.name);
 
+        }
+
+        if(this.params.status){
+        this.params.status = this.shadowRoot.querySelector("#status").value;
+        }
+
+        if(this.params.species){
+        this.params.species = this.shadowRoot.querySelector("#species").value;
+        }
+
+        if(this.params.type){
+        this.params.type = this.shadowRoot.querySelector("#type").value;
+        }
+
+        if( this.params.gender){
+        this.params.gender = this.shadowRoot.querySelector("#gender").value;
+        }
+
+        if(this.params.page){
+            this.params.page = this.shadowRoot.querySelector("#page").value;
+        }
+        
+        console.log(this.params);
+        console.log(this.params.name);
+        
+        /**FETCH
+         * PETCIONES HTTP ASINCRONAS CON CODIGO SENCILLO ATRAVEZ DE PROMESAS QUE SI SON ACEPTADAS CUANDO
+         * RECIBA UNA RESPUESTA, SI FALLA ES POR FALLO DE RED O SI NO SE HA CONCRETADO LA PETICION CL70:7:00
+         * 
+         */
+
+        //const url = `https://rickandmortyapi.com/api/character/`
+        //MANDAMOS & para concatenar mas parametros PARA TRAER LA INFORMACION
+        const url = `https://rickandmortyapi.com/api/character/?name=${this.params.name}&status=${this.params.status}&species=${this.params.species}
+        &type=${this.params.type}&gender=${this.params.gender}&page=${this.params.gender.page}`
+        console.log(url);
+        fetch(url)
+        .then(response => response.json()) // Cambiado "respuesta" a "response"
+        .then(respuesta => {
+            console.log(respuesta.results);
+
+            //ACCEDER A LA INFO, 
+            respuesta.results.forEach(element =>{
+                console.log(element.name);
+            })
+        })
+    
+    }
 }
 
 // PARA QUE EL NAVEGAGOR PUEDA INTERPRETARLO
