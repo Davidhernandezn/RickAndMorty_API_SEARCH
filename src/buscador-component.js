@@ -35,6 +35,21 @@ export class BuscadorComponent extends LitElement {
             .colorSelect{
                 background-color:var(--secondary-color);
                             }
+
+            img{
+                width:50%;
+            }
+
+            .buscador-div{
+                margin-left: 110px;
+                display:inline-grid;
+                grid-template-columns: auto auto auto;
+                padding-top: 50px; 
+            }
+            .subtitle{
+                text-align:left;
+                margin-left:10px;
+            }
             `
         ]
     }
@@ -171,6 +186,9 @@ export class BuscadorComponent extends LitElement {
                 </div>       
             </div>
         </card>
+        <br>
+        <br>
+        <div id="buscador"></div>
         
         `
     }
@@ -226,6 +244,20 @@ export class BuscadorComponent extends LitElement {
             //ACCEDER A LA INFO, 
             respuesta.results.forEach(element =>{
                 console.log(element.name);
+
+                this.shadowRoot.getElementById("buscador").innerHTML += `
+                <div class="buscador-div">
+                 <card-album class="card-album">
+                <img src="${element.image}"/>    
+                <p class="title">${element.name}</p>
+                <p class="subtitle">Status: ${element.status}</p>
+                <p class="subtitle">Species: ${element.species}</p>
+                <p class="subtitle">Type: ${element.type}</p>
+                <p class="subtitle">Gender: ${element.gender}</p>
+                </card-album>
+                </div>
+               
+                `
             })
         })
     
